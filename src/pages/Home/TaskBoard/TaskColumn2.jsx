@@ -193,143 +193,143 @@
 
 // export default TaskColumn;
 
-import React, { useState } from "react";
-import { Droppable, Draggable } from "react-beautiful-dnd";
-import { BsThreeDots } from "react-icons/bs";
-import { HiOutlinePlus } from "react-icons/hi";
-import { AiOutlineClose } from "react-icons/ai";
-import { FaEdit } from "react-icons/fa";
+// import React, { useState } from "react";
+// import { Droppable, Draggable } from "react-beautiful-dnd";
+// import { BsThreeDots } from "react-icons/bs";
+// import { HiOutlinePlus } from "react-icons/hi";
+// import { AiOutlineClose } from "react-icons/ai";
+// import { FaEdit } from "react-icons/fa";
 
-const TaskColumn = ({ category, tasks, addTask, editTask, removeTask }) => {
-  const [newTask, setNewTask] = useState({
-    title: "",
-    description: "",
-    category,
-    imageUrl: "",
-  });
-  const [editingTask, setEditingTask] = useState(null);
-  const [showInput, setShowInput] = useState(false);
+// const TaskColumn = ({ category, tasks, addTask, editTask, removeTask }) => {
+//   const [newTask, setNewTask] = useState({
+//     title: "",
+//     description: "",
+//     category,
+//     imageUrl: "",
+//   });
+//   const [editingTask, setEditingTask] = useState(null);
+//   const [showInput, setShowInput] = useState(false);
 
-  const handleAddTask = () => {
-    if (newTask.title.trim() === "") return;
-    addTask({ ...newTask });
-    setNewTask({ title: "", description: "", category, imageUrl: "" });
-    setShowInput(false);
-  };
+//   const handleAddTask = () => {
+//     if (newTask.title.trim() === "") return;
+//     addTask({ ...newTask });
+//     setNewTask({ title: "", description: "", category, imageUrl: "" });
+//     setShowInput(false);
+//   };
 
-  return (
-    <div className="w-96 bg-base-300 text-text1 shadow-md rounded-2xl p-4">
-      <div className="flex justify-between items-center">
-        <h2 className="font-semibold">{category}</h2>
-        <BsThreeDots className="cursor-pointer hover:text-primary" />
-      </div>
+//   return (
+//     <div className="w-96 bg-base-300 text-text1 shadow-md rounded-2xl p-4">
+//       <div className="flex justify-between items-center">
+//         <h2 className="font-semibold">{category}</h2>
+//         <BsThreeDots className="cursor-pointer hover:text-primary" />
+//       </div>
 
-      <Droppable droppableId={category}>
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className="mt-4 space-y-2"
-          >
-            {tasks.map((task, index) => (
-              <Draggable
-                key={task.id}
-                draggableId={task.id.toString()}
-                index={index}
-              >
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    className="bg-base-200 p-3 rounded-md cursor-pointer hover:bg-base-100"
-                    onClick={() => setEditingTask(task)}
-                  >
-                    <div className="flex justify-between items-center">
-                      <h3 className="font-bold text-primary">{task.title}</h3>
-                      <div className="flex items-center gap-2">
-                        <FaEdit className="cursor-pointer text-blue-500 hover:text-blue-700" />
-                        <AiOutlineClose
-                          className="cursor-pointer text-red-500 hover:text-red-700"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removeTask(task.id);
-                          }}
-                        />
-                      </div>
-                    </div>
-                    {task.imageUrl && (
-                      <img
-                        src={task.imageUrl}
-                        alt="Task"
-                        className="w-full h-32 object-cover mt-2 rounded-md"
-                      />
-                    )}
-                    {task.description && (
-                      <p className="text-sm text-text2 mt-1">
-                        {task.description}
-                      </p>
-                    )}
-                    <p className="text-xs text-text3 mt-1">{task.timestamp}</p>
-                    <p className="text-xs text-text4 mt-1">
-                      Category: {task.category}
-                    </p>
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
+//       <Droppable droppableId={category}>
+//         {(provided) => (
+//           <div
+//             ref={provided.innerRef}
+//             {...provided.droppableProps}
+//             className="mt-4 space-y-2"
+//           >
+//             {tasks.map((task, index) => (
+//               <Draggable
+//                 key={task.id}
+//                 draggableId={task.id.toString()}
+//                 index={index}
+//               >
+//                 {(provided) => (
+//                   <div
+//                     ref={provided.innerRef}
+//                     {...provided.draggableProps}
+//                     {...provided.dragHandleProps}
+//                     className="bg-base-200 p-3 rounded-md cursor-pointer hover:bg-base-100"
+//                     onClick={() => setEditingTask(task)}
+//                   >
+//                     <div className="flex justify-between items-center">
+//                       <h3 className="font-bold text-primary">{task.title}</h3>
+//                       <div className="flex items-center gap-2">
+//                         <FaEdit className="cursor-pointer text-blue-500 hover:text-blue-700" />
+//                         <AiOutlineClose
+//                           className="cursor-pointer text-red-500 hover:text-red-700"
+//                           onClick={(e) => {
+//                             e.stopPropagation();
+//                             removeTask(task.id);
+//                           }}
+//                         />
+//                       </div>
+//                     </div>
+//                     {task.imageUrl && (
+//                       <img
+//                         src={task.imageUrl}
+//                         alt="Task"
+//                         className="w-full h-32 object-cover mt-2 rounded-md"
+//                       />
+//                     )}
+//                     {task.description && (
+//                       <p className="text-sm text-text2 mt-1">
+//                         {task.description}
+//                       </p>
+//                     )}
+//                     <p className="text-xs text-text3 mt-1">{task.timestamp}</p>
+//                     <p className="text-xs text-text4 mt-1">
+//                       Category: {task.category}
+//                     </p>
+//                   </div>
+//                 )}
+//               </Draggable>
+//             ))}
+//             {provided.placeholder}
+//           </div>
+//         )}
+//       </Droppable>
 
-      {showInput ? (
-        <div className="mt-2 space-y-2 bg-base-200 p-3 rounded-md">
-          <input
-            type="text"
-            value={newTask.title}
-            onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-            className="w-full p-2 rounded-md bg-base-100 text-text1 outline-none"
-            placeholder="Title (max 50 chars)"
-            maxLength={50}
-            required
-          />
-          <textarea
-            value={newTask.description}
-            onChange={(e) =>
-              setNewTask({ ...newTask, description: e.target.value })
-            }
-            className="w-full p-2 rounded-md bg-base-100 text-text1 outline-none"
-            placeholder="Description (max 200 chars)"
-            maxLength={200}
-          />
-          <input
-            type="text"
-            value={newTask.imageUrl}
-            onChange={(e) =>
-              setNewTask({ ...newTask, imageUrl: e.target.value })
-            }
-            className="w-full p-2 rounded-md bg-base-100 text-text1 outline-none"
-            placeholder="Image URL (Optional)"
-          />
-          <button
-            onClick={handleAddTask}
-            className="w-full py-2 bg-primary text-white rounded-md"
-          >
-            Add Task
-          </button>
-        </div>
-      ) : (
-        <div
-          className="flex items-center gap-2 mt-4 cursor-pointer text-text2 hover:text-primary"
-          onClick={() => setShowInput(true)}
-        >
-          <HiOutlinePlus />
-          <p>Add a card</p>
-        </div>
-      )}
-    </div>
-  );
-};
+//       {showInput ? (
+//         <div className="mt-2 space-y-2 bg-base-200 p-3 rounded-md">
+//           <input
+//             type="text"
+//             value={newTask.title}
+//             onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+//             className="w-full p-2 rounded-md bg-base-100 text-text1 outline-none"
+//             placeholder="Title (max 50 chars)"
+//             maxLength={50}
+//             required
+//           />
+//           <textarea
+//             value={newTask.description}
+//             onChange={(e) =>
+//               setNewTask({ ...newTask, description: e.target.value })
+//             }
+//             className="w-full p-2 rounded-md bg-base-100 text-text1 outline-none"
+//             placeholder="Description (max 200 chars)"
+//             maxLength={200}
+//           />
+//           <input
+//             type="text"
+//             value={newTask.imageUrl}
+//             onChange={(e) =>
+//               setNewTask({ ...newTask, imageUrl: e.target.value })
+//             }
+//             className="w-full p-2 rounded-md bg-base-100 text-text1 outline-none"
+//             placeholder="Image URL (Optional)"
+//           />
+//           <button
+//             onClick={handleAddTask}
+//             className="w-full py-2 bg-primary text-white rounded-md"
+//           >
+//             Add Task
+//           </button>
+//         </div>
+//       ) : (
+//         <div
+//           className="flex items-center gap-2 mt-4 cursor-pointer text-text2 hover:text-primary"
+//           onClick={() => setShowInput(true)}
+//         >
+//           <HiOutlinePlus />
+//           <p>Add a card</p>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
 
-export default TaskColumn;
+// export default TaskColumn;
