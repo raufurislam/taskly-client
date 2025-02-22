@@ -9,6 +9,8 @@
 // import useAuth from "../../../hooks/useAuth";
 // import useAxiosPublic from "../../../hooks/useAxiosPublic";
 
+// const categories = ["To-Do", "In Progress", "Done"];
+
 // const TaskColumn = ({ category }) => {
 //   const [newTask, setNewTask] = useState({
 //     title: "",
@@ -55,28 +57,19 @@
 
 //   // Update Task
 //   const updateTask = async (id) => {
+//     const updatedTask = {
+//       ...editedTask,
+//       imageUrl: editedTask.imageUrl?.trim() === "" ? null : editedTask.imageUrl,
+//       timestamp: new Date().toLocaleString(),
+//     };
 //     try {
-//       await axiosPublic.put(`/tasks/${id}`, {
-//         ...editedTask,
-//         timestamp: new Date().toLocaleString(),
-//       });
+//       await axiosPublic.put(`/tasks/${id}`, updatedTask);
 //       setEditingTask(null);
 //       refetch();
 //     } catch (error) {
 //       console.error("Error updating task:", error);
 //     }
 //   };
-
-//   // Update Task
-//   // const updateTask = async (id) => {
-//   //   try {
-//   //     await axiosPublic.put(`/tasks/${id}`, editedTask);
-//   //     setEditingTask(null);
-//   //     refetch();
-//   //   } catch (error) {
-//   //     console.error("Error updating task:", error);
-//   //   }
-//   // };
 
 //   return (
 //     <div className="w-96 mx-auto bg-base-300 text-text1 shadow-md rounded-2xl p-4">
@@ -104,14 +97,16 @@
 //               )}
 //               <div className="flex justify-between items-center">
 //                 {editingTask === task._id ? (
-//                   <input
-//                     type="text"
-//                     value={editedTask.title || task.title}
-//                     onChange={(e) =>
-//                       setEditedTask({ ...editedTask, title: e.target.value })
-//                     }
-//                     className="w-full p-2 rounded-md bg-base-100 text-text1"
-//                   />
+//                   <>
+//                     <input
+//                       type="text"
+//                       value={editedTask.title || task.title}
+//                       onChange={(e) =>
+//                         setEditedTask({ ...editedTask, title: e.target.value })
+//                       }
+//                       className="w-full p-2 rounded-md bg-base-100 text-text1"
+//                     />
+//                   </>
 //                 ) : (
 //                   <h3 className="font-bold text-primary">{task.title}</h3>
 //                 )}
@@ -156,13 +151,26 @@
 //                   />
 //                   <input
 //                     type="text"
-//                     value={editedTask.imageUrl || task.imageUrl}
+//                     value={editedTask.imageUrl || ""}
 //                     onChange={(e) =>
 //                       setEditedTask({ ...editedTask, imageUrl: e.target.value })
 //                     }
 //                     className="w-full p-2 rounded-md bg-base-100 text-text1 mt-2"
 //                     placeholder="Image URL"
 //                   />
+//                   <select
+//                     value={editedTask.category || task.category}
+//                     onChange={(e) =>
+//                       setEditedTask({ ...editedTask, category: e.target.value })
+//                     }
+//                     className="w-full p-2 rounded-md bg-base-100 text-text1 mt-2"
+//                   >
+//                     {categories.map((cat) => (
+//                       <option key={cat} value={cat}>
+//                         {cat}
+//                       </option>
+//                     ))}
+//                   </select>
 //                 </>
 //               ) : (
 //                 task.description && (
@@ -173,51 +181,6 @@
 //             </div>
 //           ))}
 //       </div>
-
-//       {/* Add task */}
-//       {showInput ? (
-//         <div className="mt-2 space-y-2 bg-base-200 p-3 rounded-md">
-//           <input
-//             type="text"
-//             value={newTask.title}
-//             onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-//             className="w-full p-2 rounded-md bg-base-100 text-text1"
-//             placeholder="Title"
-//           />
-//           <textarea
-//             value={newTask.description}
-//             onChange={(e) =>
-//               setNewTask({ ...newTask, description: e.target.value })
-//             }
-//             className="w-full p-2 rounded-md bg-base-100 text-text1"
-//             placeholder="Description"
-//           />
-//           <input
-//             type="text"
-//             value={newTask.imageUrl}
-//             onChange={(e) =>
-//               setNewTask({ ...newTask, imageUrl: e.target.value })
-//             }
-//             className="w-full p-2 rounded-md bg-base-100 text-text1"
-//             placeholder="Image URL (Optional)"
-//           />
-//           <button
-//             onClick={addTask}
-//             className="w-full py-2 bg-primary text-white rounded-md"
-//           >
-//             Add Task
-//           </button>
-//         </div>
-//       ) : (
-//         <div
-//           onClick={() => setShowInput(true)}
-//           className="flex items-center gap-2 mt-4 cursor-pointer text-text2 hover:text-primary"
-//         >
-//           <HiOutlinePlus />
-//           <p>Add a card</p>
-//           <LuCalendar className="ml-auto cursor-pointer" />
-//         </div>
-//       )}
 //     </div>
 //   );
 // };
@@ -297,6 +260,16 @@ const TaskColumn = ({ category }) => {
     }
   };
 
+  // Remove Task
+  const removeTask = async (id) => {
+    try {
+      await axiosPublic.delete(`/tasks/${id}`);
+      refetch();
+    } catch (error) {
+      console.error("Error removing task:", error);
+    }
+  };
+
   return (
     <div className="w-96 mx-auto bg-base-300 text-text1 shadow-md rounded-2xl p-4">
       <div className="flex justify-between items-center">
@@ -353,13 +326,21 @@ const TaskColumn = ({ category }) => {
                       </button>
                     </>
                   ) : (
-                    <FaEdit
-                      onClick={() => {
-                        setEditingTask(task._id);
-                        setEditedTask(task);
-                      }}
-                      className="cursor-pointer text-blue-500 hover:text-blue-700"
-                    />
+                    <>
+                      <FaEdit
+                        onClick={() => {
+                          setEditingTask(task._id);
+                          setEditedTask(task);
+                        }}
+                        className="cursor-pointer text-blue-500 hover:text-blue-700"
+                      />
+                      {editingTask === null && (
+                        <AiOutlineClose
+                          onClick={() => removeTask(task._id)}
+                          className="cursor-pointer text-red-500 hover:text-red-700"
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -375,28 +356,6 @@ const TaskColumn = ({ category }) => {
                     }
                     className="w-full p-2 rounded-md bg-base-100 text-text1"
                   />
-                  <input
-                    type="text"
-                    value={editedTask.imageUrl || ""}
-                    onChange={(e) =>
-                      setEditedTask({ ...editedTask, imageUrl: e.target.value })
-                    }
-                    className="w-full p-2 rounded-md bg-base-100 text-text1 mt-2"
-                    placeholder="Image URL"
-                  />
-                  <select
-                    value={editedTask.category || task.category}
-                    onChange={(e) =>
-                      setEditedTask({ ...editedTask, category: e.target.value })
-                    }
-                    className="w-full p-2 rounded-md bg-base-100 text-text1 mt-2"
-                  >
-                    {categories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
                 </>
               ) : (
                 task.description && (
@@ -407,6 +366,55 @@ const TaskColumn = ({ category }) => {
             </div>
           ))}
       </div>
+      {showInput ? (
+        <div className="mt-4">
+          <input
+            type="text"
+            value={newTask.title}
+            onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+            className="w-full p-2 rounded-md bg-base-100 text-text1"
+            placeholder="Title"
+            maxLength={50}
+          />
+
+          {/* add description */}
+          <textarea
+            value={newTask.description}
+            onChange={(e) =>
+              setNewTask({ ...newTask, description: e.target.value })
+            }
+            className="w-full p-2 rounded-md bg-base-100 text-text1"
+            placeholder="Description"
+            maxLength={250}
+          />
+
+          {/* add image field */}
+          <input
+            type="text"
+            value={newTask.imageUrl}
+            onChange={(e) =>
+              setNewTask({ ...newTask, imageUrl: e.target.value })
+            }
+            className="w-full p-2 rounded-md bg-base-100 text-text1 outline-none"
+            placeholder="Image URL (Optional)"
+          />
+          <button
+            onClick={addTask}
+            className="mt-2 bg-primary p-2 rounded-md text-white w-full"
+          >
+            Add Task
+          </button>
+        </div>
+      ) : (
+        <div
+          className="flex items-center gap-2 mt-4 cursor-pointer text-text2 hover:text-primary"
+          onClick={() => setShowInput(true)}
+        >
+          <HiOutlinePlus />
+          <p>Add a card</p>
+          <LuCalendar className="ml-auto cursor-pointer" />
+        </div>
+      )}
     </div>
   );
 };
