@@ -223,11 +223,11 @@ const Navbar = () => {
           </div>
           <NavLink to="/" className="btn btn-ghost text-xl px-0">
             <img
-              src="https://img.icons8.com/?size=40&id=33124&format=png"
-              alt="Foundify Logo"
-              className="w-6 object-cover"
+              src="https://img.icons8.com/?size=80&id=111399&format=png"
+              alt="Taskly Logo"
+              className="w-8 object-cover"
             />
-            Soulmate
+            Taskly
           </NavLink>
         </div>
 

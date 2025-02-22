@@ -28,7 +28,7 @@ const TaskBoard = () => {
   };
 
   return (
-    <div className="flex justify-center gap-4 p-5">
+    <div className="flex flex-col md:flex-row justify-center gap-4 p-5">
       {categories.map((category) => (
         <TaskColumn
           key={category}
