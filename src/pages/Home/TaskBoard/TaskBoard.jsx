@@ -28,7 +28,7 @@ const TaskBoard = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify-center gap-4 p-5">
+    <div className="flex flex-col lg:flex-row lg:items-start justify-start gap-4 p-5 w-full max-w-screen-lg mx-auto overflow-hidden">
       {categories.map((category) => (
         <TaskColumn
           key={category}

@@ -15,9 +15,9 @@ const Main = () => {
       </div>
 
       {/* Footer at the bottom */}
-      <div className="mt-20">
+      {/* <div className="mt-20">
         <h1>footer</h1>
-      </div>
+      </div> */}
     </div>
   );
 };

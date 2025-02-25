@@ -59,9 +59,13 @@ const TaskColumn = ({ category }) => {
   const updateTask = async (id) => {
     const updatedTask = {
       ...editedTask,
+      title: editedTask.title?.trim() === "" ? "" : editedTask.title,
+      description:
+        editedTask.description?.trim() === "" ? "" : editedTask.description,
       imageUrl: editedTask.imageUrl?.trim() === "" ? null : editedTask.imageUrl,
       timestamp: new Date().toLocaleString(),
     };
+
     try {
       await axiosPublic.put(`/tasks/${id}`, updatedTask);
       setEditingTask(null);
@@ -82,7 +86,7 @@ const TaskColumn = ({ category }) => {
   };
 
   return (
-    <div className="mx-auto bg-base-300 text-text1 shadow-md rounded-2xl p-4">
+    <div className="w-full sm:w-80 bg-base-300 text-text1 shadow-md rounded-2xl p-4">
       <div className="flex justify-between items-center">
         <h2 className="font-semibold">{category}</h2>
         <div className="flex items-center gap-2 text-text2">
@@ -96,7 +100,7 @@ const TaskColumn = ({ category }) => {
           .map((task) => (
             <div
               key={task._id}
-              className="max-w-screen-sm bg-base-200 p-3 rounded-md hover:bg-base-100"
+              className="bg-base-200 p-3 rounded-md hover:bg-base-100"
             >
               {task.imageUrl && !editingTask && (
                 <img
@@ -110,33 +114,23 @@ const TaskColumn = ({ category }) => {
                   <>
                     <input
                       type="text"
-                      value={editedTask.title || task.title}
+                      value={
+                        editedTask.title !== undefined
+                          ? editedTask.title
+                          : task.title
+                      }
                       onChange={(e) =>
                         setEditedTask({ ...editedTask, title: e.target.value })
                       }
-                      className="w-full p-2 rounded-md bg-base-100 text-text1"
+                      placeholder="Title (Max 50)"
+                      className="w-full border border-gray-700 p-2 rounded-md bg-base-100 text-text1"
+                      required
                     />
-                    <select
-                      value={editedTask.category || task.category}
-                      onChange={(e) =>
-                        setEditedTask({
-                          ...editedTask,
-                          category: e.target.value,
-                        })
-                      }
-                      className="ml-2 p-2 rounded-md"
-                    >
-                      {categories.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat}
-                        </option>
-                      ))}
-                    </select>
                   </>
                 ) : (
                   <h3 className="font-bold text-primary">{task.title}</h3>
                 )}
-                <div className="flex items-center gap-2">
+                <div className="ml-3 flex items-center gap-2">
                   {editingTask === task._id ? (
                     <>
                       <button
@@ -174,34 +168,55 @@ const TaskColumn = ({ category }) => {
               {editingTask === task._id ? (
                 <>
                   <textarea
-                    value={editedTask.description || task.description}
+                    value={
+                      editedTask.description !== undefined
+                        ? editedTask.description
+                        : task.description
+                    }
                     onChange={(e) =>
                       setEditedTask({
                         ...editedTask,
                         description: e.target.value,
                       })
                     }
-                    className="w-full p-2 rounded-md bg-base-100 text-text1"
+                    className="w-full border border-gray-700 mt-2 p-2 rounded-md bg-base-100 text-text1"
                   />
+
                   <input
                     type="text"
-                    value={editedTask.imageUrl || task.imageUrl}
+                    value={editedTask.imageUrl || ""} // Ensure it's an empty string when cleared
+                    onChange={(e) => {
+                      const newImageUrl =
+                        e.target.value.trim() === "" ? null : e.target.value;
+                      setEditedTask({ ...editedTask, imageUrl: newImageUrl });
+                    }}
+                    className="w-full  border border-gray-700 p-2 rounded-md bg-base-100 text-text1 mt-1"
+                    placeholder="Image URL"
+                  />
+
+                  <select
+                    value={editedTask.category || task.category}
                     onChange={(e) =>
                       setEditedTask({
                         ...editedTask,
-                        imageUrl: e.target.value,
+                        category: e.target.value,
                       })
                     }
-                    className="w-full p-2 rounded-md bg-base-100 text-text1 mt-2"
-                    placeholder="Image URL"
-                  />
+                    className="w-full p-2 mt-2 border border-gray-700 rounded-md bg-base-100"
+                  >
+                    {categories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
                 </>
               ) : (
                 task.description && (
                   <p className="text-sm text-text2 mt-1">{task.description}</p>
                 )
               )}
-              <p className="text-xs text-text3 mt-1">{task.timestamp}</p>
+              <p className="text-xs text-text3 mt-2">{task.timestamp}</p>
             </div>
           ))}
       </div>
@@ -214,6 +229,7 @@ const TaskColumn = ({ category }) => {
             className="w-full p-2 rounded-md bg-base-100 text-text1"
             placeholder="Title"
             maxLength={50}
+            required
           />
 
           <textarea
@@ -221,7 +237,7 @@ const TaskColumn = ({ category }) => {
             onChange={(e) =>
               setNewTask({ ...newTask, description: e.target.value })
             }
-            className="w-full p-2 rounded-md bg-base-100 text-text1"
+            className="w-full p-2 mt-2 rounded-md bg-base-100 text-text1"
             placeholder="Description"
             maxLength={250}
           />
@@ -232,23 +248,9 @@ const TaskColumn = ({ category }) => {
             onChange={(e) =>
               setNewTask({ ...newTask, imageUrl: e.target.value })
             }
-            className="w-full p-2 rounded-md bg-base-100 text-text1 outline-none"
+            className="w-full p-2 rounded-md bg-base-100 mt-[3px] text-text1 outline-none"
             placeholder="Image URL (Optional)"
           />
-
-          {/* <select
-            value={newTask.category}
-            onChange={(e) =>
-              setNewTask({ ...newTask, category: e.target.value })
-            }
-            className="w-full p-2 rounded-md mt-2"
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select> */}
 
           <button
             onClick={addTask}
